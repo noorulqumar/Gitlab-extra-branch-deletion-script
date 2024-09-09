@@ -54,13 +54,6 @@ get_sub_group_project_id() {
     curl --silent --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "$GITLAB_API/projects?search=$project_name" | jq -r --arg name "$project_name" --arg loc "$location" '.[] | select(.path_with_namespace==$loc) | .id'
 }
 
-# Function to get project ID by name within a subgroup
-get_sub_sub_group_project_id() {
-    local project_name=$1
-    curl --silent --header "PRIVATE-TOKEN: glpat-9m8McTuwq7QtEYtEmZJa" "https://development.idgital.com/api/v4/projects?search=$project_name" | jq --arg project_name "$project_name" '.[] | select(.name==$project_name) | .id'
-    #curl --silent --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "$GITLAB_API/projects?search=$project_name" | jq -r --arg name "$project_name" --arg loc "$location" '.[] | select(.path_with_namespace==$loc) | .id'
-}
-
 
 
 # Function to fetch all branches considering pagination
@@ -285,7 +278,7 @@ while IFS= read -r line; do
         echo "Exporting the Group ID as Environment Variable: $group_id"
 
         # Get the project ID for group and Setup As Environment Variable p
-        #project_id=$(get_sub_sub_group_project_id "${project_name}" )
+        #project_id=$( "${project_name}" )
         project_id=$(get_sub_group_project_id "${project_name}" "$line")
         if [ -z "$project_id" ]; then
             echo "$(color_text 31 "❌ Project '${project_name}' not found in group '${path}'.")"
